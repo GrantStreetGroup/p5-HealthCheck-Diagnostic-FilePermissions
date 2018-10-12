@@ -31,6 +31,27 @@ is $result->{status}, 'CRITICAL',
 is $result->{info}, qq{App must have permission to execute "$filename"},
     'Info message is correct.';
 
+# Check that `check` parameters override the initialized parameters.
+$diagnostic = HealthCheck::Diagnostic::FilePermissions->new(
+    files  => [ $filename ],
+    access => '!rwx',
+);
+$result = $diagnostic->check;
+is $result->{status}, 'CRITICAL',
+    'Test that the original instance check is invalid.';
+is $result->{info},
+    qq{App must not have permission to read and write "$filename"},
+    'Info message is correct.';
+$result = $diagnostic->check(
+    files  => [ $filename2 ],
+    access => 'rw',
+);
+is $result->{status}, 'OK',
+    'Test that we can override the instance values.';
+is $result->{info},
+    qq{App has correct access for "$filename2"},
+    'Info message is correct.';
+
 # Create a method that returns the info and status after running the
 # check. If it failed, then this just returns the error.
 my $run_check_or_error = sub {

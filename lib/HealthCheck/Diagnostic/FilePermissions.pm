@@ -25,9 +25,11 @@ sub new {
 sub check {
     my ($self, %params) = @_;
 
-    # Make it so that the diagnostic can be used as an instance.
+    # Make it so that the diagnostic can be used as an instance or a
+    # class, and the `check` params get preference.
     if ( ref $self ) {
-        $params{$_} = $self->{$_} foreach keys %$self;
+        $params{$_} = $self->{$_}
+            foreach grep { ! defined $params{$_} } keys %$self;
     }
 
     # Allow the files to be either an anonymous sub, an array, or a
