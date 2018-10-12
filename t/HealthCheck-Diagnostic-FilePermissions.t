@@ -7,9 +7,8 @@ use Test::Differences;
 use HealthCheck::Diagnostic::FilePermissions;
 
 # Add a few fake files that will be used during the tests.
-my $dir               = tempdir( CLEANUP => 1 );
-my ($fh, $filename)   = tempfile( DIR => $dir );
-my ($fh2, $filename2) = tempfile( DIR => $dir );
+my $filename  = File::Temp->new( CLEANUP => 1 );
+my $filename2 = File::Temp->new( CLEANUP => 1 );
 
 # Check that we can use HealthCheck as a class.
 my $result = HealthCheck::Diagnostic::FilePermissions->check(

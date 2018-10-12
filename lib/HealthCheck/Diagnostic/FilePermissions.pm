@@ -49,11 +49,11 @@ sub check {
         # expecting an enabled permission. Everything to the right is
         # regarded as expecting a disabled permission.
         my ($enabled, $disabled) = split( '!', $params{access} || '' );
-        my %enabled_hash  = map { $_ => 1 } split( //, $enabled || '' );
-        my %disabled_hash = map { $_ => 0 } split( //, $disabled || '' );
-        $params{access} = { %enabled_hash, %disabled_hash };
+        $params{access} = {
+                ( map { $_ => 1 } split //, $enabled || '' ),
+                ( map { $_ => 0 } split //, $disabled || '' ),
+        };
     }
-    use Data::Dumper;
     my %map = (
         r       => 'read',
         read    => 'read',
@@ -314,7 +314,7 @@ Any access permissions that are not defined are just ignored.
     access => { r    => 1, w     => 0, x       => 0 }
     access => { read => 1, write => 0, execute => 0 }
 
-    # Expect that the app can write, but ignore other access permissions.
+    # Expect that the app can read, but ignore other access permissions.
     access => 'r'
     access => { r    => 1 }
     access => { read => 1 }
