@@ -1,5 +1,7 @@
 use GSG::Gitc::CPANfile $_environment;
 
-# Project requirements go here...
+requires 'HealthCheck::Diagnostic';
+
+test_requires 'Test::Differences';
 
 1;
