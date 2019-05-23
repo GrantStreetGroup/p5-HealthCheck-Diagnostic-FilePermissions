@@ -41,7 +41,7 @@ sub check {
         # Passed-in strings can only be one file name.
         $params{files} = [ $params{files} ];
     }
-    croak( "No files extracted" ) unless @{ $params{files} || [] };
+    croak( 'No files extracted' ) unless @{ $params{files} || [] };
 
     # Convert the access parameter into a r/w/x hash if it is not already
     # a hash. Then convert that into a read/write/execute hash.
@@ -84,7 +84,7 @@ sub run {
             # Don't attempt to look for permissions if the file does
             # not exist.
             push @results, {
-                info   => qq{"$file" does not exist},
+                info   => qq{'$file' does not exist},
                 status => 'CRITICAL',
             };
             next;
@@ -105,7 +105,7 @@ sub run {
         # Add a default result if there were no permissions to check
         # for the file.
         push @file_results, {
-            info   => qq{"$file" exists},
+            info   => qq{'$file' exists},
             status => 'OK',
         } unless @file_results;
 
@@ -117,8 +117,8 @@ sub run {
     my @info = map { $_->{info} } grep { $_->{status} ne 'OK' } @results;
 
     # Use a default success message if no fail info messages were found.
-    push @info, "Permissions are correct for ".
-        $self->pretty_join( map { qq{"$_"} } @{ $params{files} } )
+    push @info, 'Permissions are correct for '.
+        $self->pretty_join( map { qq{'$_'} } @{ $params{files} } )
         unless @info;
 
     return { info => join( '; ', @info ), results => \@results };
@@ -140,7 +140,7 @@ sub check_access {
 
     # Run the tests and construct the error messages, identifying which
     # access operation failed.
-    my $info = "App's permisions for $file:";
+    my $info = "App's permisions for '$file':";
     my @access_errors;
     my %actual = (
         read    => -r $file,
@@ -156,16 +156,16 @@ sub check_access {
     # no errors.
     return {
         status => 'OK',
-        info   => qq{App has correct access for "$file"},
+        info   => qq{App has correct access for '$file'},
     } unless @access_errors;
 
     # Summarize the failed info messages in the results.
     my @info;
-    push @info, "App must have permission to ".
-        $self->pretty_join( @{ $access_errors[1] } ).qq{ "$file"}
+    push @info, 'App must have permission to '.
+        $self->pretty_join( @{ $access_errors[1] } ).qq{ '$file'}
         if @{ $access_errors[1] || [] };
-    push @info, "App must not have permission to ".
-        $self->pretty_join( @{ $access_errors[0] } ).qq{ "$file"}
+    push @info, 'App must not have permission to '.
+        $self->pretty_join( @{ $access_errors[0] } ).qq{ '$file'}
         if @{ $access_errors[0] || [] };
     return {
         status => 'CRITICAL',
@@ -178,18 +178,18 @@ sub check_permissions {
 
     # Stringify the expected and actual permissions so that they can be
     # easily understood.
-    my $actual   = sprintf( "%04o", (stat($file))[2] &07777 );
-    my $expected = sprintf( "%04o", $permissions &07777 );
+    my $actual   = sprintf( '%04o', (stat($file))[2] &07777 );
+    my $expected = sprintf( '%04o', $permissions &07777 );
 
     return {
         status => 'CRITICAL',
         info   => "Permissions should be $expected but ".
-            "are $actual for \"$file\"",
+            "are $actual for '$file'",
     } if $expected != $actual;
 
     return {
         status => 'OK',
-        info   => qq{Permissions are $actual for "$file"},
+        info   => qq{Permissions are $actual for '$file'},
     };
 }
 
@@ -199,12 +199,12 @@ sub check_owner {
     my $actual = getpwuid( ( stat $file )[4] );
     return {
         status => 'CRITICAL',
-        info   => qq{Owner should be $owner but is $actual for "$file"},
+        info   => qq{Owner should be $owner but is $actual for '$file'},
     } unless $actual eq $owner;
 
     return {
         status => 'OK',
-        info   => qq{Owner is $owner for "$file"},
+        info   => qq{Owner is $owner for '$file'},
     };
 }
 
@@ -214,12 +214,12 @@ sub check_group {
     my $actual = getgrgid( ( stat $file )[5] );
     return {
         status => 'CRITICAL',
-        info   => qq{Group should be $group but is $actual for "$file"},
+        info   => qq{Group should be $group but is $actual for '$file'},
     } unless $actual eq $group;
 
     return {
         status => 'OK',
-        info   => qq{Group is $group for "$file"},
+        info   => qq{Group is $group for '$file'},
     };
 }
 
