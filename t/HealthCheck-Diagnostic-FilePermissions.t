@@ -115,12 +115,12 @@ $diagnostic = HealthCheck::Diagnostic::FilePermissions->new(
     permissions => 0755,
 );
 eq_or_diff( $run_check_or_error->( $diagnostic ), [
-    'OK', qq{Permissions are 0755 for '$filename'},
+    'OK', qq{Permissions are 755 for '$filename'},
 ], 'Pass when given the right file permissions.' );
 chmod( 0700, $filename );
 eq_or_diff( $run_check_or_error->( $diagnostic ), [
     'CRITICAL',
-    qq{Permissions should be 0755 but are 0700 for '$filename'},
+    qq{Permissions should be 755 but are 700 for '$filename'},
 ], 'Do not pass when the permissions are incorrect for a file.' );
 
 # Check for permissions when we have multiple files.
@@ -136,7 +136,7 @@ eq_or_diff( $run_check_or_error->( $diagnostic ), [
 chmod( 0700, $filename2 );
 eq_or_diff( $run_check_or_error->( $diagnostic ), [
     'CRITICAL',
-    qq{Permissions should be 0644 but are 0700 for '$filename2'},
+    qq{Permissions should be 644 but are 700 for '$filename2'},
 ], 'Do not pass when one of the files has different permissions.' );
 
 # Check for the right result when looking for permissions and one of the
@@ -260,7 +260,7 @@ chmod( 0666, $filename );
 eq_or_diff( $run_check_or_error->( $diagnostic ), [
     'CRITICAL',
     "App must have permission to execute '$filename'; Permissions ".
-    "should be 0777 but are 0666 for '$filename'; 'doesnt_exist' ".
+    "should be 777 but are 666 for '$filename'; 'doesnt_exist' ".
     "does not exist",
 ], 'Fail when permissions fail and another file does not exist.' );
 
