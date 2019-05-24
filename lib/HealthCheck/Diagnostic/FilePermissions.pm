@@ -178,8 +178,8 @@ sub check_permissions {
 
     # Stringify the expected and actual permissions so that they can be
     # easily understood.
-    my $actual   = sprintf( '%04o', (stat($file))[2] &07777 );
-    my $expected = sprintf( '%04o', $permissions &07777 );
+    my $actual   = sprintf( '%04o', ( stat($file) )[2] & 07777 );
+    my $expected = sprintf( '%04o', $permissions & 07777 );
 
     return {
         status => 'CRITICAL',
