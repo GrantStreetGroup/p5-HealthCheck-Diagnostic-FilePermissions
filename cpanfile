@@ -1,10 +1,17 @@
-use GSG::Gitc::CPANfile $_environment;
+requires 'parent';
+requires 'strict';
+requires 'warnings';
+
+requires 'Carp';
 
 requires 'HealthCheck::Diagnostic';
 
-test_requires 'Test::Differences';
+on test => sub {
+    requires 'File::Temp';
+    requires 'Test::Differences';
+    requires 'Test::More';
+};
 
-1;
 on develop => sub {
-    requires 'Dist::Zilla::PluginBundle::Author::GSG::Internal';
+    requires 'Dist::Zilla::PluginBundle::Author::GSG';
 };

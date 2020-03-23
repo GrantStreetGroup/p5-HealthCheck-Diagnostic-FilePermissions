@@ -1,8 +1,6 @@
 MANIFEST
-MANIFEST.bak
 META.*
 MYMETA.*
-Makefile.old
 _build/
 .build/
 build/
@@ -14,9 +12,11 @@ pm_to_blib
 *#
 .#*
 *~
-cpanfile.snapshot
-local/
-HealthCheck-*-v*/
-HealthCheck-*-v*.tar.*
-.perl-version
 *.bak
+*.old
+cpanfile.snapshot
+.perl-version
+local/
+*.bak
+HealthCheck-Diagnostic-FilePermissions-*/
+HealthCheck-Diagnostic-FilePermissions-*.tar.*
