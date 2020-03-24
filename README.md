@@ -105,15 +105,17 @@ Any access permissions that are not defined are just ignored.
 
 The octal value of the permissions on the file (or files).
 
-    permissions => 0700 # User can read, write, and execute the file(s).
-    permissions => 0000 # Nobody can read, write, or execute the file(s).
+    # User can read, write, and execute the file(s).
+    permissions => 0700
+
+    # Nobody can read, write, or execute the file(s).
+    permissions => 0000
 
 ## owner
 
 The owner name of the file (or files).
 
     owner => 'bmessine'
-    owner => 'gsgd'
 
 ## group
 
