@@ -4,7 +4,7 @@ HealthCheck::Diagnostic::FilePermissions - Check the paths for expected permissi
 
 # VERSION
 
-version 1.4.0.1
+version v1.4.2
 
 # SYNOPSIS
 
@@ -105,15 +105,17 @@ Any access permissions that are not defined are just ignored.
 
 The octal value of the permissions on the file (or files).
 
-    permissions => 0700 # User can read, write, and execute the file(s).
-    permissions => 0000 # Nobody can read, write, or execute the file(s).
+    # User can read, write, and execute the file(s).
+    permissions => 0700
+
+    # Nobody can read, write, or execute the file(s).
+    permissions => 0000
 
 ## owner
 
 The owner name of the file (or files).
 
     owner => 'bmessine'
-    owner => 'gsgd'
 
 ## group
 
@@ -135,17 +137,8 @@ Grant Street Group <developers@grantstreet.com>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2018 - 2019 by Grant Street Group.  No
-license is granted to other entities.
+This software is Copyright (c) 2018 - 2020 by Grant Street Group.
 
-# CONTRIBUTORS
+This is free software, licensed under:
 
-- Authors:
-- (9) Brandon Messineo <brandon.messineo@grantstreet.com>
-- (2) Andrew Hewus Fresh <andrew.fresh@grantstreet.com>
-- (1) Andrew Fresh <andrew.fresh@grantstreet.com>
-- Reviewers:
-- (2) Andrew Fresh <andrew.fresh@grantstreet.com> 
-- (2) Brandon Messineo <brandon.messineo@grantstreet.com> 
-- Deployers:
-- (12) Brandon Messineo <brandon.messineo@grantstreet.com>  
+    The Artistic License 2.0 (GPL Compatible)
