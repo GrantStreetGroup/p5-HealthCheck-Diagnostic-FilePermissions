@@ -4,7 +4,7 @@ HealthCheck::Diagnostic::FilePermissions - Check the paths for expected permissi
 
 # VERSION
 
-version v1.4.2
+version v1.4.3
 
 # SYNOPSIS
 
