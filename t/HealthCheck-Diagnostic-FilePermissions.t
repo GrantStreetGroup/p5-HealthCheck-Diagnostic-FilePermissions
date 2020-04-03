@@ -107,6 +107,9 @@ eq_or_diff( $run_check_or_error->(
     'OK', qq{Permissions are correct for '$filename' and '$filename2'},
 ], 'Pass when sending in a sub for the file list.' );
 
+SKIP: {
+     skip "chmod, getpwuid, or getgrgid not supported"
+        if $^O eq 'MSWin32';
 
     # Check for permissions on the file.
     chmod( 0755, $filename );
@@ -340,5 +343,6 @@ eq_or_diff( $run_check_or_error->(
         "Owner should be fo but is $owner for '$filename'; Group should ".
         "be fg but is $group for '$filename'",
     ], 'Fail when the owner and group are incorrect.' );
+}
 
 done_testing;
