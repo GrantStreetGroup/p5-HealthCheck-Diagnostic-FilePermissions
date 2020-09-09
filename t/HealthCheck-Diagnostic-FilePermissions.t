@@ -33,24 +33,42 @@ is $result->{info}, qq{App must have permission to execute '$filename'},
 
 # Check that `check` parameters override the initialized parameters.
 $diagnostic = HealthCheck::Diagnostic::FilePermissions->new(
-    files  => [ $filename ],
-    access => '!rwx',
+    id                     => 'custom_id',
+    label                  => 'Custom Label',
+    collapse_single_result => 0,
+    files                  => [$filename],
+    access                 => '!rwx',
 );
 $result = $diagnostic->check;
 is $result->{status}, 'CRITICAL',
     'Test that the original instance check is invalid.';
-is $result->{info},
-    qq{App must not have permission to read and write '$filename'},
-    'Info message is correct.';
+eq_or_diff $result, {
+    id      => 'custom_id',
+    label   => 'Custom Label',
+    status  => 'CRITICAL',
+    info    => qq{App must not have permission to read and write '$filename'},
+    results => [ {
+        status => 'CRITICAL',
+        info =>
+            qq{App must not have permission to read and write '$filename'},
+    } ],
+}, 'Result is as expected.';
 $result = $diagnostic->check(
-    files  => [ $filename2 ],
+    id     => 'overridden_id',     # TODO?
+    label  => 'Overridden Label',  # TODO?
+    files  => [$filename2],
     access => 'rw',
 );
-is $result->{status}, 'OK',
-    'Test that we can override the instance values.';
-is $result->{info},
-    qq{App has correct access for '$filename2'},
-    'Info message is correct.';
+eq_or_diff $result, {
+    id      => 'custom_id',
+    label   => 'Custom Label',
+    status  => 'OK',
+    info    => qq{Permissions are correct for '$filename2'},
+    results => [ {
+        status => 'OK',
+        info   => qq{App has correct access for '$filename2'},
+    } ],
+}, 'Test that we can override some instance values.';
 
 # Create a method that returns the info and status after running the
 # check. If it failed, then this just returns the error.
