@@ -22,6 +22,16 @@ sub new {
     );
 }
 
+sub collapse_single_result {
+    my ($self, @args) = @_;
+    return $self->SUPER::collapse_single_result(@args)
+        if ref $self and exists $self->{collapse_single_result};
+
+    # If we are only checking a single parameter on a single file,
+    # the additional level of results is useless here.
+    return 1;
+}
+
 sub check {
     my ($self, %params) = @_;
 
@@ -342,6 +352,13 @@ The owner name of the file (or files).
 The group name of the file (or files).
 
     group => 'developers'
+
+=head2 collapse_single_result
+
+The default for L<HealthCheck::Diagnostic/collapse_single_result>
+is changed to be truthy.
+
+This only has an effect if checking a single attribute of a single file.
 
 =head1 DEPENDENCIES
 
