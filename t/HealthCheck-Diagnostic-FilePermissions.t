@@ -17,7 +17,7 @@ my $result = HealthCheck::Diagnostic::FilePermissions->check(
 );
 is $result->{status}, 'CRITICAL',
     'Can use HealthCheck as a class.';
-is $result->{info}, qq{App must have permission to execute '$filename'},
+is $result->{info}, qq{Must have permission to execute '$filename'},
     'Info message is correct.';
 
 # Check that we can use HealthCheck with initialized values too.
@@ -28,7 +28,7 @@ my $diagnostic = HealthCheck::Diagnostic::FilePermissions->new(
 $result = $diagnostic->check;
 is $result->{status}, 'CRITICAL',
     'Can use HealthCheck with instance values too.';
-is $result->{info}, qq{App must have permission to execute '$filename'},
+is $result->{info}, qq{Must have permission to execute '$filename'},
     'Info message is correct.';
 
 # Check that `check` parameters override the initialized parameters.
@@ -46,11 +46,11 @@ eq_or_diff $result, {
     id      => 'custom_id',
     label   => 'Custom Label',
     status  => 'CRITICAL',
-    info    => qq{App must not have permission to read and write '$filename'},
+    info    => qq{Must not have permission to read and write '$filename'},
     results => [ {
         status => 'CRITICAL',
         info =>
-            qq{App must not have permission to read and write '$filename'},
+            qq{Must not have permission to read and write '$filename'},
     } ],
 }, 'Result is as expected.';
 $result = $diagnostic->check(
@@ -66,7 +66,7 @@ eq_or_diff $result, {
     info    => qq{Permissions are correct for '$filename2'},
     results => [ {
         status => 'OK',
-        info   => qq{App has correct access for '$filename2'},
+        info   => qq{Have correct access for '$filename2'},
     } ],
 }, 'Test that we can override some instance values.';
 
@@ -183,12 +183,12 @@ SKIP: {
             access => $access{$_},
         );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
-            'OK', qq{App has correct access for '$filename'},
+            'OK', qq{Have correct access for '$filename'},
         ], "$_: Pass when the app needs to rwx and can rwx." );
         chmod( 0000, $filename );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
             'CRITICAL',
-            qq{App must have permission to execute, read, and write '$filename'},
+            qq{Must have permission to execute, read, and write '$filename'},
         ], "$_: Fail when the app needs to rwx and cannot rwx." );
     }
     %access = (
@@ -203,16 +203,16 @@ SKIP: {
             access => $access{$_},
         );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
-            'OK', qq{App has correct access for '$filename'},
+            'OK', qq{Have correct access for '$filename'},
         ], "$_: Pass when the app should only rw and can rw." );
         chmod( 0444, $filename );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
-            'CRITICAL', qq{App must have permission to write '$filename'},
+            'CRITICAL', qq{Must have permission to write '$filename'},
         ], "$_: Fail when the app should only rw but can only r." );
         chmod( 0000, $filename );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
             'CRITICAL',
-            qq{App must have permission to read and write '$filename'},
+            qq{Must have permission to read and write '$filename'},
         ], "$_: Fail when the app should only rw and cannot rw." );
     }
     %access = (
@@ -227,21 +227,21 @@ SKIP: {
             access => $access{$_},
         );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
-            'OK', qq{App has correct access for '$filename'},
+            'OK', qq{Have correct access for '$filename'},
         ], "$_: Pass when the app should not rwx and cannot rwx." );
         chmod( 0444, $filename );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
-            'CRITICAL', qq{App must not have permission to read '$filename'},
+            'CRITICAL', qq{Must not have permission to read '$filename'},
         ], "$_: Fail when the app should not rwx and can r." );
         chmod( 0666, $filename );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
             'CRITICAL',
-            qq{App must not have permission to read and write '$filename'},
+            qq{Must not have permission to read and write '$filename'},
         ], "$_: Fail when the app should not rwx and can rw." );
         chmod( 0777, $filename );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
             'CRITICAL',
-            "App must not have permission to execute, read, ".
+            "Must not have permission to execute, read, ".
             "and write '$filename'",
         ], 'Fail when the app should not rwx and can rwx.' );
     }
@@ -258,13 +258,13 @@ SKIP: {
     ], 'Pass when the access permissions are correct for both files.' );
     chmod( 0666, $filename2 );
     eq_or_diff( $run_check_or_error->( $diagnostic ), [
-        'CRITICAL', qq{App must have permission to execute '$filename2'},
+        'CRITICAL', qq{Must have permission to execute '$filename2'},
     ], 'Fail when the access permissions are incorrect for one file.' );
     chmod( 0444, $filename );
     eq_or_diff( $run_check_or_error->( $diagnostic ), [
         'CRITICAL',
-        "App must have permission to execute and write '$filename'; App ".
-        "must have permission to execute '$filename2'",
+        "Must have permission to execute and write '$filename'; ".
+        "Must have permission to execute '$filename2'",
     ], 'Fail when the access permissions are incorrect for both files.' );
 
     # Try pairing the access permissions tests with other checks.
@@ -280,7 +280,7 @@ SKIP: {
     chmod( 0666, $filename );
     eq_or_diff( $run_check_or_error->( $diagnostic ), [
         'CRITICAL',
-        "App must have permission to execute '$filename'; Permissions ".
+        "Must have permission to execute '$filename'; Permissions ".
         "should be 0777 but are 0666 for '$filename'; 'doesnt_exist' ".
         "does not exist",
     ], 'Fail when permissions fail and another file does not exist.' );
@@ -298,11 +298,11 @@ SKIP: {
             access => $access{$_},
         );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
-            'OK', qq{App has correct access for '$filename'},
+            'OK', qq{Have correct access for '$filename'},
         ], "$_: Pass when the app should w and can rw." );
         chmod( 0000, $filename );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
-            'CRITICAL', qq{App must have permission to write '$filename'},
+            'CRITICAL', qq{Must have permission to write '$filename'},
         ], "$_: Fail when the app should w and cannot rwx." );
     }
     %access = (
@@ -317,12 +317,12 @@ SKIP: {
             access => $access{$_},
         );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
-            'OK', qq{App has correct access for '$filename'},
+            'OK', qq{Have correct access for '$filename'},
         ], "$_: Pass when the app should not x and can w." );
         chmod( 0700, $filename );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
             'CRITICAL',
-            qq{App must not have permission to execute '$filename'},
+            qq{Must not have permission to execute '$filename'},
         ], "$_: Fail when app should not x and can rwx." );
     }
 

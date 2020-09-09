@@ -150,7 +150,7 @@ sub check_access {
 
     # Run the tests and construct the error messages, identifying which
     # access operation failed.
-    my $info = "App's permisions for '$file':";
+    my $info = "Permisions for '$file':";
     my @access_errors;
     my %actual = (
         read    => -r $file,
@@ -166,15 +166,15 @@ sub check_access {
     # no errors.
     return {
         status => 'OK',
-        info   => qq{App has correct access for '$file'},
+        info   => qq{Have correct access for '$file'},
     } unless @access_errors;
 
     # Summarize the failed info messages in the results.
     my @info;
-    push @info, 'App must have permission to '.
+    push @info, 'Must have permission to '.
         $self->pretty_join( @{ $access_errors[1] } ).qq{ '$file'}
         if @{ $access_errors[1] || [] };
-    push @info, 'App must not have permission to '.
+    push @info, 'Must not have permission to '.
         $self->pretty_join( @{ $access_errors[0] } ).qq{ '$file'}
         if @{ $access_errors[0] || [] };
     return {
@@ -252,10 +252,10 @@ __END__
     $d->check( permissions => 0777 );
 
     # Check that the app has access to the file(s).
-    $d->check( access => 'x' );    # App can execute files.
-    $d->check( access => 'rw' );   # App can read and write files.
-    $d->check( access => 'r!wx' ); # App can read, not write and execute files.
-    $d->check( access => {         # App can read files.
+    $d->check( access => 'x' );    # Can execute files.
+    $d->check( access => 'rw' );   # Can read and write files.
+    $d->check( access => 'r!wx' ); # Can read, not write and execute files.
+    $d->check( access => {         # Can read files.
         read => 1,
     } );
 
