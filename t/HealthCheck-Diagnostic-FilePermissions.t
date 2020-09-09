@@ -49,7 +49,7 @@ $result = $diagnostic->check(
 is $result->{status}, 'OK',
     'Test that we can override the instance values.';
 is $result->{info},
-    qq{Permissions are correct for '$filename2'},
+    qq{App has correct access for '$filename2'},
     'Info message is correct.';
 
 # Create a method that returns the info and status after running the
@@ -81,7 +81,7 @@ like $run_check_or_error->( files => sub {} ), qr/No files extracted/,
 
 # Check for the file path existing on one file.
 eq_or_diff( $run_check_or_error->( files => [ $filename ] ), [
-    'OK', qq{Permissions are correct for '$filename'},
+    'OK', qq{'$filename' exists},
 ], 'Only check for file that exists when passed file list.' );
 eq_or_diff( $run_check_or_error->( files => [ 'file/doesnt/exist' ] ), [
     'CRITICAL', qq{'file/doesnt/exist' does not exist},
@@ -97,7 +97,7 @@ eq_or_diff( $run_check_or_error->( files => [ $filename, $filename2 ] ), [
 
 # Check that we can use a string for one file name.
 eq_or_diff( $run_check_or_error->( files => $filename ), [
-    'OK', qq{Permissions are correct for '$filename'},
+    'OK', qq{'$filename' exists},
 ], 'Pass when sending in a string for the file list.' );
 
 # Check that we can use a sub to generate the file names.
@@ -118,7 +118,7 @@ SKIP: {
         permissions => '493', # 0755 in decimal
     );
     eq_or_diff( $run_check_or_error->( $diagnostic ), [
-        'OK', qq{Permissions are correct for '$filename'},
+        'OK', qq{Permissions are 0755 for '$filename'},
     ], 'Pass when given the right file permissions.' );
     chmod( 0700, $filename );
     eq_or_diff( $run_check_or_error->( $diagnostic ), [
@@ -165,7 +165,7 @@ SKIP: {
             access => $access{$_},
         );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
-            'OK', qq{Permissions are correct for '$filename'},
+            'OK', qq{App has correct access for '$filename'},
         ], "$_: Pass when the app needs to rwx and can rwx." );
         chmod( 0000, $filename );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
@@ -185,7 +185,7 @@ SKIP: {
             access => $access{$_},
         );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
-            'OK', qq{Permissions are correct for '$filename'},
+            'OK', qq{App has correct access for '$filename'},
         ], "$_: Pass when the app should only rw and can rw." );
         chmod( 0444, $filename );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
@@ -209,7 +209,7 @@ SKIP: {
             access => $access{$_},
         );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
-            'OK', qq{Permissions are correct for '$filename'},
+            'OK', qq{App has correct access for '$filename'},
         ], "$_: Pass when the app should not rwx and cannot rwx." );
         chmod( 0444, $filename );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
@@ -280,7 +280,7 @@ SKIP: {
             access => $access{$_},
         );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
-            'OK', qq{Permissions are correct for '$filename'},
+            'OK', qq{App has correct access for '$filename'},
         ], "$_: Pass when the app should w and can rw." );
         chmod( 0000, $filename );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
@@ -299,7 +299,7 @@ SKIP: {
             access => $access{$_},
         );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
-            'OK', qq{Permissions are correct for '$filename'},
+            'OK', qq{App has correct access for '$filename'},
         ], "$_: Pass when the app should not x and can w." );
         chmod( 0700, $filename );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
@@ -321,10 +321,10 @@ SKIP: {
     my $owner = getpwuid( ( stat $filename )[4] );
     my $group = getgrgid( ( stat $filename )[5] );
     eq_or_diff( $run_check_or_error->( %f, owner => $owner ), [
-        'OK', qq{Permissions are correct for '$filename'},
+        'OK', qq{Owner is $owner for '$filename'},
     ], 'Pass when the owner is correct.' );
     eq_or_diff( $run_check_or_error->( %f, group => $group ), [
-        'OK', qq{Permissions are correct for '$filename'},
+        'OK', qq{Group is $group for '$filename'},
     ], 'Pass when the group is correct.' );
     eq_or_diff(
         $run_check_or_error->( %f, owner => $owner, group => $group ), [
