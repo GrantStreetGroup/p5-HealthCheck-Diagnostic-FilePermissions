@@ -170,7 +170,7 @@ SKIP: {
         'CRITICAL', qq{'doesnt_exist' does not exist},
     ], 'Do not pass when checking permissions and one file doesn\'t exist.' );
 
-    # Make sure the app can access a file correctly.
+    # Make sure it can access a file correctly.
     my %access = (
         full_name_hash  => { read => 1, write => 1, execute => 1 },
         short_name_hash => { r    => 1, w     => 1, x       => 1 },
@@ -184,12 +184,12 @@ SKIP: {
         );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
             'OK', qq{Have correct access for '$filename'},
-        ], "$_: Pass when the app needs to rwx and can rwx." );
+        ], "$_: Pass when it needs to rwx and can rwx." );
         chmod( 0000, $filename );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
             'CRITICAL',
             qq{Must have permission to execute, read, and write '$filename'},
-        ], "$_: Fail when the app needs to rwx and cannot rwx." );
+        ], "$_: Fail when it needs to rwx and cannot rwx." );
     }
     %access = (
         full_name_hash  => { read => 1, write => 1, execute => 0 },
@@ -204,16 +204,16 @@ SKIP: {
         );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
             'OK', qq{Have correct access for '$filename'},
-        ], "$_: Pass when the app should only rw and can rw." );
+        ], "$_: Pass when it should only rw and can rw." );
         chmod( 0444, $filename );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
             'CRITICAL', qq{Must have permission to write '$filename'},
-        ], "$_: Fail when the app should only rw but can only r." );
+        ], "$_: Fail when it should only rw but can only r." );
         chmod( 0000, $filename );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
             'CRITICAL',
             qq{Must have permission to read and write '$filename'},
-        ], "$_: Fail when the app should only rw and cannot rw." );
+        ], "$_: Fail when it should only rw and cannot rw." );
     }
     %access = (
         full_name_hash   => { r    => 0, w     => 0, x       => 0 },
@@ -228,22 +228,22 @@ SKIP: {
         );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
             'OK', qq{Have correct access for '$filename'},
-        ], "$_: Pass when the app should not rwx and cannot rwx." );
+        ], "$_: Pass when it should not rwx and cannot rwx." );
         chmod( 0444, $filename );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
             'CRITICAL', qq{Must not have permission to read '$filename'},
-        ], "$_: Fail when the app should not rwx and can r." );
+        ], "$_: Fail when it should not rwx and can r." );
         chmod( 0666, $filename );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
             'CRITICAL',
             qq{Must not have permission to read and write '$filename'},
-        ], "$_: Fail when the app should not rwx and can rw." );
+        ], "$_: Fail when it should not rwx and can rw." );
         chmod( 0777, $filename );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
             'CRITICAL',
             "Must not have permission to execute, read, ".
             "and write '$filename'",
-        ], 'Fail when the app should not rwx and can rwx.' );
+        ], 'Fail when it should not rwx and can rwx.' );
     }
 
     # Make sure that the access permissions work for multiple files.
@@ -299,11 +299,11 @@ SKIP: {
         );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
             'OK', qq{Have correct access for '$filename'},
-        ], "$_: Pass when the app should w and can rw." );
+        ], "$_: Pass when it should w and can rw." );
         chmod( 0000, $filename );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
             'CRITICAL', qq{Must have permission to write '$filename'},
-        ], "$_: Fail when the app should w and cannot rwx." );
+        ], "$_: Fail when it should w and cannot rwx." );
     }
     %access = (
         full_name_hash  => { execute => 0 },
@@ -318,12 +318,12 @@ SKIP: {
         );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
             'OK', qq{Have correct access for '$filename'},
-        ], "$_: Pass when the app should not x and can w." );
+        ], "$_: Pass when it should not x and can w." );
         chmod( 0700, $filename );
         eq_or_diff( $run_check_or_error->( $diagnostic ), [
             'CRITICAL',
             qq{Must not have permission to execute '$filename'},
-        ], "$_: Fail when app should not x and can rwx." );
+        ], "$_: Fail when it should not x and can rwx." );
     }
 
     # Test that it dies when we pass invalid access parameters.
