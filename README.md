@@ -4,7 +4,7 @@ HealthCheck::Diagnostic::FilePermissions - Check the paths for expected permissi
 
 # VERSION
 
-version v1.4.3
+version v1.4.8
 
 # SYNOPSIS
 
@@ -122,6 +122,13 @@ The owner name of the file (or files).
 The group name of the file (or files).
 
     group => 'developers'
+
+## collapse\_single\_result
+
+The default for ["collapse\_single\_result" in HealthCheck::Diagnostic](https://metacpan.org/pod/HealthCheck%3A%3ADiagnostic#collapse_single_result)
+is changed to be truthy.
+
+This only has an effect if checking a single attribute of a single file.
 
 # DEPENDENCIES
 
