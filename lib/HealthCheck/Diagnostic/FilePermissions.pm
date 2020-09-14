@@ -22,6 +22,16 @@ sub new {
     );
 }
 
+sub collapse_single_result {
+    my ($self, @args) = @_;
+    return $self->SUPER::collapse_single_result(@args)
+        if ref $self and exists $self->{collapse_single_result};
+
+    # If we are only checking a single parameter on a single file,
+    # the additional level of results is useless here.
+    return 1;
+}
+
 sub check {
     my ($self, %params) = @_;
 
@@ -140,7 +150,7 @@ sub check_access {
 
     # Run the tests and construct the error messages, identifying which
     # access operation failed.
-    my $info = "App's permisions for '$file':";
+    my $info = "Permissions for '$file':";
     my @access_errors;
     my %actual = (
         read    => -r $file,
@@ -156,15 +166,15 @@ sub check_access {
     # no errors.
     return {
         status => 'OK',
-        info   => qq{App has correct access for '$file'},
+        info   => qq{Have correct access for '$file'},
     } unless @access_errors;
 
     # Summarize the failed info messages in the results.
     my @info;
-    push @info, 'App must have permission to '.
+    push @info, 'Must have permission to '.
         $self->pretty_join( @{ $access_errors[1] } ).qq{ '$file'}
         if @{ $access_errors[1] || [] };
-    push @info, 'App must not have permission to '.
+    push @info, 'Must not have permission to '.
         $self->pretty_join( @{ $access_errors[0] } ).qq{ '$file'}
         if @{ $access_errors[0] || [] };
     return {
@@ -241,11 +251,11 @@ __END__
     );
     $d->check( permissions => 0777 );
 
-    # Check that the app has access to the file(s).
-    $d->check( access => 'x' );    # App can execute files.
-    $d->check( access => 'rw' );   # App can read and write files.
-    $d->check( access => 'r!wx' ); # App can read, not write and execute files.
-    $d->check( access => {         # App can read files.
+    # Check that it has access to the file(s).
+    $d->check( access => 'x' );    # Can execute files.
+    $d->check( access => 'rw' );   # Can read and write files.
+    $d->check( access => 'r!wx' ); # Can read, not write and execute files.
+    $d->check( access => {         # Can read files.
         read => 1,
     } );
 
@@ -301,22 +311,22 @@ on the files.
 
 Any access permissions that are not defined are just ignored.
 
-    # Expect that the app can read, write, and execute the file(s).
+    # Expect that it can read, write, and execute the file(s).
     access => 'rwx'
     access => { r    => 1, w     => 1, x       => 1 }
     access => { read => 1, write => 1, execute => 1 },
 
-    # Expect that the app cannot read, write, or execute the file(s).
+    # Expect that it cannot read, write, or execute the file(s).
     access => '!rwx'
     access => { r    => 0, w     => 0, x       => 0 }
     access => { read => 0, write => 0, execute => 0 }
 
-    # Expect that the app can read but not write, nor execute the file(s).
+    # Expect that it can read but not write, nor execute the file(s).
     access => 'r!wx'
     access => { r    => 1, w     => 0, x       => 0 }
     access => { read => 1, write => 0, execute => 0 }
 
-    # Expect that the app can read, but ignore other access permissions.
+    # Expect that it can read, but ignore other access permissions.
     access => 'r'
     access => { r    => 1 }
     access => { read => 1 }
@@ -342,6 +352,13 @@ The owner name of the file (or files).
 The group name of the file (or files).
 
     group => 'developers'
+
+=head2 collapse_single_result
+
+The default for L<HealthCheck::Diagnostic/collapse_single_result>
+is changed to be truthy.
+
+This only has an effect if checking a single attribute of a single file.
 
 =head1 DEPENDENCIES
 
