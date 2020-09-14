@@ -150,7 +150,7 @@ sub check_access {
 
     # Run the tests and construct the error messages, identifying which
     # access operation failed.
-    my $info = "Permisions for '$file':";
+    my $info = "Permissions for '$file':";
     my @access_errors;
     my %actual = (
         read    => -r $file,
